@@ -78,20 +78,24 @@ class Country:
         food_mult = self.agriculture_tech_level
         money_mult = 1
 
-
-        # consume current food reservers
-        for resource in [constants.GRAIN, constants.VEG, constants.MEAT]:
-            self.food[resource] -= self.population * constants.FOOD_SECURE[resource]
-
-        if any([i < 0 for i in self.food.values()]):
-            died = min(self.food.values()) / self.population
-
-        
         if self.in_disaster:
             money_mult *= constants.DISASTER_MONEY_DEBUF
             food_mult *= constants.DISASTER_PRODUCTION_DEBUF
             pop_mult *= constants.DISASTER_POPULATION_DECREASE
 
+        # consume current food reservers
+        for resource in [constants.GRAIN, constants.VEG, constants.MEAT]:
+            self.food[resource] -= self.population * constants.FOOD_SECURE[resource]
+
+        # causes citizens to die of starvation if food is insecure
+        if any([i < 0 for i in self.food.values()]):
+            died = min(self.food.values()) / self.population
+            self.population -= died
+
+        # rots leftover food
+        for resource in [constants.GRAIN, constants.VEG, constants.MEAT]:
+            self.food[resource] *= constants.FOOD_REMAINING_AFTER_ROT
+            
 
         # grow population, get money and produce
         self.population *= self.population_growth_rate * pop_mult

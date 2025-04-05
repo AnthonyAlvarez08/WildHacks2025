@@ -189,8 +189,41 @@ class SimLoop:
         for country in insecure:
 
             # try to request trade?
-            pass
+            
+            
+            for resource in [constants.VEG, constants.MEAT, constants.GRAIN]:
+                if country.food[resource] / country.population < constants.FOOD_SECURE[resource]:
+                    # find a country with enough food to give you
+
+
+                    # food needed
+                    food_needed = (constants.FOOD_SECURE[resource] - country.food[resource] / country.population) * country.population
+
+                    target = random.choice([i for i in self.countries if i.food[resource] > food_needed])
+
+                    self.request_list.append(Request(country, target, food_needed, resource))
+
+
 
     def _comp_react(self):
-        pass
+        
+        for rq in self.request_list:
+            # processs each request
+
+            requester = rq.requester
+            recepient = rq.recepient
+
+            # check if requester has surplus
+            surplus = (recepient.food[rq.resource] / recepient.population - constants.FOOD_SECURE[rq.resource]) * recepient.population
+            if surplus > 0:
+                # random slice of their surplus I guess?
+
+                trade_amount = round(random.random() * surplus)
+
+
+                # accepts the request
+                self.food_trading.update(requester, recepient, trade_amount)
+            else:
+                # deny request, which means do nothing
+                pass
     
