@@ -2,8 +2,8 @@
 WildHacks 2025 Project
 
 ## Team
-Anthony Alvarez
-Nancy Yang
+Anthony Alvarez;
+Nancy Yang;
 Tanat (Johnny) Tungsubutra
 
 
