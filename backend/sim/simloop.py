@@ -176,7 +176,7 @@ class SimLoop:
                 res = country.try_end_disaster()
 
                 if res:
-                    self.log.append(f"{country.name} succesfully ended disaster")
+                    self.log.append(f"{country.name} successfully ended disaster")
                 else:
                     self.log.append(f"{country.name} tried and failed to end the disaster")
             else:

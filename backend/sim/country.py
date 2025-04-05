@@ -77,6 +77,15 @@ class Country:
         pop_mult = 1
         food_mult = self.agriculture_tech_level
         money_mult = 1
+
+
+        # consume current food reservers
+        for resource in [constants.GRAIN, constants.VEG, constants.MEAT]:
+            self.food[resource] -= self.population * constants.FOOD_SECURE[resource]
+
+        if any([i < 0 for i in self.food.values()]):
+            died = min(self.food.values()) / self.population
+
         
         if self.in_disaster:
             money_mult *= constants.DISASTER_MONEY_DEBUF
