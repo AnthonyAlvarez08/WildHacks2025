@@ -4,7 +4,7 @@ WildHacks 2025 Project
 ## Team
 Anthony Alvarez
 Nancy Yang
-Johnny Tungsubutra
+Tanat (Johnny) Tungsubutra
 
 
 ### libraries used
