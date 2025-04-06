@@ -12,15 +12,19 @@ simulation: SimLoop = None
 @app.route("/index", methods=["GET", "POST"])
 @app.route("/home", methods=["GET", "POST"])
 def home():
+    global simulation
 
     flag = False
     flagmsg = ""
+
+    if simulation == None:
+        simulation = SimLoop()
 
     if request.method == "POST":
         # simulation.advance_one_year()
         # simulation.end_player_turn()
 
-        print(request.form)
+        # print(request.form)
 
         try:
             target_country, mycountry, option, quantity = (request.form[i] for i in ['country', 'mycountry', 'option', 'quantity'])
@@ -30,20 +34,20 @@ def home():
             option = ''
             quantity = 0
 
-            print("some error with parsing the form", request.form)
+            # print("some error with parsing the form", request.form)
             flag = True
             flagmsg = f"some error with parsing the form {request.form}"
 
         try:
             quantity = float(quantity)
         except:
-            print("bad quantity", quantity)
+            # print("bad quantity", quantity)
             flag = True
             flagmsg = f"bad quantity {quantity}"
         
-        print(target_country, mycountry, option, quantity)
-        print(mycountry)
-        print([i.name for i in simulation.countries])
+        # print(target_country, mycountry, option, quantity)
+        # print(mycountry)
+        # print([i.name for i in simulation.countries])
 
         if "ask" in option:
 

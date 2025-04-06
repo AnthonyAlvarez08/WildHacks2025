@@ -9,3 +9,4 @@ Tanat (Johnny) Tungsubutra
 
 ### libraries used
 Flask
+React, Vite (technically, not in the actuall deployed thing)
