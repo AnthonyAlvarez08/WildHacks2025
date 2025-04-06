@@ -22,6 +22,7 @@ class Country:
         
         self.name = name
         self.population = population * 100
+        self.initial_population = population * 100
         self.population_growth_rate = population_growth_rate
         self.money = starting_money
         self.income_rate = starting_money / 10
@@ -106,7 +107,8 @@ class Country:
             
 
         # grow population, get money and produce
-        self.population *= self.population_growth_rate * pop_mult
+        if self.population * pop_mult > self.initial_population * 0.5:
+            self.population *= self.population_growth_rate * pop_mult
         self.money += self.income_rate * money_mult
         self.money = math.ceil(self.money)
         self.population = math.ceil(self.population)

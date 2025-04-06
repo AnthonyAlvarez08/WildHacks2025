@@ -11,15 +11,15 @@ import random
 
 # instantiate initial countries and such
 
-usa = Country("USA", 347, 1.0068, 30338, 1, 389)
+usa = Country("USA", 347, 1.0068, 30338, 1, 389, player_controlled=True)
 saudi_arabia = Country("Saudi Arabia", 35, 1.0165, 1138, 1, 9)
-japan = Country("Japan", 123, 1.0041, 4390, 7, 10)
+japan = Country("Japan", 123, -1.0041, 4390, 7, 10)
 brazil = Country("Brazil", 212, 1.0061, 2308, 4, 144)
-ukraine = Country("Ukraine", 39, 1.0052, 189, 7, 81)
+ukraine = Country("Ukraine", 39, -1.0052, 189, 7, 81, player_controlled=True)
 malaysia = Country("Malaysia", 36, 1.0101, 488, 3, 2)
 haiti = Country("Haiti", 12, 1.0118, 24, 9, 3)
 india = Country("India", 1463, 1.0070, 4270, 4, 381)
-ethiopia = Country("Ethiopia", 135, 1.0242, 238, 7, 40)
+ethiopia = Country("Ethiopia", 135, 1.0242, 238, 7, 40, player_controlled=True)
 
 class SimStates:
     CompRequests = 1
@@ -53,6 +53,13 @@ class SimLoop:
         self.request_list: list[Request] = []
 
         self.log = []
+        self.log_start = 0
+
+    def find_country(self, name):
+        for i in self.countries:
+            if name == i.name:
+                return i
+        return None
 
 
     """
@@ -81,6 +88,13 @@ class SimLoop:
         
         self.tariffs.update(player.id, target.id, amount)
 
+
+    def request_resources(self, player: Country, target: Country, resource, amount: float):
+        if self.state != SimStates.PlayerPhase or not player.player_controlled:
+            return
+
+        self.request_list.append(Request(player, target, resource, amount))
+
     def invest_in_agriculture(self, player: Country) -> bool:
         if self.state != SimStates.PlayerPhase or not player.player_controlled:
             return False
@@ -93,6 +107,8 @@ class SimLoop:
 
     def end_player_turn(self):
         self.state = SimStates.CompReact
+
+        self.log_start = len(self.log)
 
         self._comp_react()
 
