@@ -1,5 +1,7 @@
 # WildHacks2025
 WildHacks 2025 Project
+Track Agriculture
+"Choose Your Own Adventure"
 
 ## Team
 Anthony Alvarez;
@@ -8,5 +10,5 @@ Tanat (Johnny) Tungsubutra
 
 
 ### libraries used
-Flask
-React, Vite (technically, not in the actuall deployed thing)
+Flask (For python)
+React, Vite (for js)
