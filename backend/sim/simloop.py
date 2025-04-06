@@ -11,15 +11,15 @@ import random
 
 # instantiate initial countries and such
 
-usa = Country("USA", 347, 1.0068, 30338, 1, 389, player_controlled=True)
-saudi_arabia = Country("Saudi Arabia", 35, 1.0165, 1138, 1, 9)
-japan = Country("Japan", 123, -1.0041, 4390, 7, 10)
-brazil = Country("Brazil", 212, 1.0061, 2308, 4, 144)
-ukraine = Country("Ukraine", 39, -1.0052, 189, 7, 81, player_controlled=True)
-malaysia = Country("Malaysia", 36, 1.0101, 488, 3, 2)
-haiti = Country("Haiti", 12, 1.0118, 24, 9, 3)
-india = Country("India", 1463, 1.0070, 4270, 4, 381)
-ethiopia = Country("Ethiopia", 135, 1.0242, 238, 7, 40, player_controlled=True)
+# usa = Country("USA", 347, 1.0068, 30338, 1, 389, player_controlled=True)
+# saudi_arabia = Country("Saudi Arabia", 35, 1.0165, 1138, 1, 9)
+# japan = Country("Japan", 123, -1.0041, 4390, 7, 10)
+# brazil = Country("Brazil", 212, 1.0061, 2308, 4, 144)
+# ukraine = Country("Ukraine", 39, -1.0052, 189, 7, 81, player_controlled=True)
+# malaysia = Country("Malaysia", 36, 1.0101, 488, 3, 2)
+# haiti = Country("Haiti", 12, 1.0118, 24, 9, 3)
+# india = Country("India", 1463, 1.0070, 4270, 4, 381)
+# ethiopia = Country("Ethiopia", 135, 1.0242, 238, 7, 40, player_controlled=True)
 
 class SimStates:
     CompRequests = 1
@@ -47,6 +47,16 @@ class SimLoop:
         self.year = 0
         
         self.state = SimStates.CompRequests
+
+        usa = Country("USA", 347, 1.0068, 30338, 1, 389, player_controlled=True)
+        saudi_arabia = Country("Saudi Arabia", 35, 1.0165, 1138, 1, 9)
+        japan = Country("Japan", 123, -1.0041, 4390, 7, 10)
+        brazil = Country("Brazil", 212, 1.0061, 2308, 4, 144)
+        ukraine = Country("Ukraine", 39, -1.0052, 189, 7, 81, player_controlled=True)
+        malaysia = Country("Malaysia", 36, 1.0101, 488, 3, 2)
+        haiti = Country("Haiti", 12, 1.0118, 24, 9, 3)
+        india = Country("India", 1463, 1.0070, 4270, 4, 381)
+        ethiopia = Country("Ethiopia", 135, 1.0242, 238, 7, 40, player_controlled=True)
 
         self.countries: list[Country] = [usa, saudi_arabia, japan, brazil, ukraine, malaysia, haiti, india, ethiopia]
 
