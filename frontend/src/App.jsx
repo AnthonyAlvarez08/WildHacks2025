@@ -2,9 +2,10 @@ import React, { Component }  from 'react';
 import Message from "./Message";
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import { useState } from 'react';
 
 function App() {
-  const [count, setount] = useState(0)
+  const [count, setCount] = useState(0)
 
   return (
     <>

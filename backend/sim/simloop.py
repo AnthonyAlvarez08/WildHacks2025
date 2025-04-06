@@ -11,20 +11,20 @@ import random
 
 # instantiate initial countries and such
 
-usa = Country("USA", 347, 1.0068, 30338, 1)
-saudi_arabia = Country("Saudi Arabia", 35, 1.0165, 1138, 1)
-japan = Country("Japan", 123, -1.0041, 4390, 7)
-brazil = Country("Brazil", 212, 1.0061, 2308, 4)
-ukraine = Country("Ukraine", 39, -1.0052, 189, 7)
-malaysia = Country("Malaysia", 36, 1.0101, 488, 3)
-haiti = Country("Haiti", 12, 1.0118, 24, 9)
-india = Country("India", 1463, 1.0070, 4270, 4)
-ethiopia = Country("Ethiopia", 135, 1.0242, 238, 7)
+usa = Country("USA", 347, 1.0068, 30338, 1, 389)
+saudi_arabia = Country("Saudi Arabia", 35, 1.0165, 1138, 1, 9)
+japan = Country("Japan", 123, 1.0041, 4390, 7, 10)
+brazil = Country("Brazil", 212, 1.0061, 2308, 4, 144)
+ukraine = Country("Ukraine", 39, 1.0052, 189, 7, 81)
+malaysia = Country("Malaysia", 36, 1.0101, 488, 3, 2)
+haiti = Country("Haiti", 12, 1.0118, 24, 9, 3)
+india = Country("India", 1463, 1.0070, 4270, 4, 381)
+ethiopia = Country("Ethiopia", 135, 1.0242, 238, 7, 40)
 
 class SimStates:
     CompRequests = 1
     PlayerPhase = 2
-    CompRequests = 3
+    CompReact = 3
 
 class SimLoop:
     def __init__(self):
@@ -126,13 +126,18 @@ class SimLoop:
                     export = self.food_trading.get(i.id, b.id) # is dict
                     costs = 0
                     for idx in [constants.VEG, constants.MEAT, constants.GRAIN]:
+                        # print(export)
                         costs += constants.PRICES[idx] *  export[idx]
+
+                    if costs == 0:
+                        continue
 
                     costs *= (1 + tariff)
 
                     # check failure cases for transactions
                     if i.money < costs:
-                        self.log.append(f"Couldnt complete transaction: {i.name} importing {export} from {b.name} with tariff {tariff}")
+                        self.log.append(f"Couldn't complete transaction: {i.name}(money {i.money}) importing {export} from {b.name}(resources: {b.food}) with tariff {tariff}, costs {costs}. ")
+                        self.food_trading.update(i.id, b.id, {constants.VEG: 0, constants.MEAT: 0, constants.GRAIN: 0})
                         continue
 
                     can_export = True
@@ -140,8 +145,12 @@ class SimLoop:
                         if b.food[idx] < export[idx]:
                             can_export = False
                     if not can_export:
-                        self.log.append(f"Couldnt complete transaction: {i.name} importing {export} from {b.name} with tariff {tariff}")
+                        self.log.append(f"Couldn't complete transaction: {i.name}(money {i.money}) importing {export} from {b.name}(resources: {b.food}) with tariff {tariff}, costs {costs}. ")
+                        self.food_trading.update(i.id, b.id, {constants.VEG: 0, constants.MEAT: 0, constants.GRAIN: 0})
                         continue
+
+
+                    self.log.append(f"Transaction completed: {i.name}(money {i.money}) importing {export} from {b.name}(resources: {b.food}) with tariff {tariff}, costs {costs}. ")
 
 
 
@@ -156,7 +165,7 @@ class SimLoop:
                 disaster.append(i)
 
             
-        self.log.append((f"Food inscure countries",  [j.name for j in insecure]))
+        self.log.append((f"Food insecure countries",  [j.name for j in insecure]))
         self.log.append((f"Countries in disaster", [j.name for j in disaster]))
 
         self.year += 1
@@ -199,9 +208,15 @@ class SimLoop:
                     # food needed
                     food_needed = (constants.FOOD_SECURE[resource] - country.food[resource] / country.population) * country.population
 
-                    target = random.choice([i for i in self.countries if i.food[resource] > food_needed])
+                    # surpluses = [i for i in self.countries if i.food[resource] > food_needed] + [random.choice(self.countries)]
+                    # target = random.choice(surpluses)
+                    # self.request_list.append(Request(country, target, food_needed, resource))
 
-                    self.request_list.append(Request(country, target, food_needed, resource))
+                    for i in self.countries:
+                        if i.id != country.id:
+                            self.request_list.append(Request(country, i, food_needed, resource))
+
+                    
 
 
 
@@ -213,17 +228,31 @@ class SimLoop:
             requester = rq.requester
             recepient = rq.recepient
 
-            # check if requester has surplus
-            surplus = (recepient.food[rq.resource] / recepient.population - constants.FOOD_SECURE[rq.resource]) * recepient.population
-            if surplus > 0:
-                # random slice of their surplus I guess?
+            if recepient.id != requester.id: # I forgot to check for this elswhere but who cares
 
-                trade_amount = round(random.random() * surplus)
+                # check if requester has surplus
+                surplus = (recepient.food[rq.resource] / recepient.population - constants.FOOD_SECURE[rq.resource]) * recepient.population
+                if surplus > 0:
+                    # random slice of their surplus I guess?
+
+                    trade_amount = round(random.random() * surplus)
+
+                    # random chance of benevolence
+                    if random.random() < constants.BENEVOLENCE:
+                        recepient.food[rq.resource] -= trade_amount
+                        requester.food[rq.resource] += trade_amount
+                    else:
 
 
-                # accepts the request
-                self.food_trading.update(requester, recepient, trade_amount)
-            else:
-                # deny request, which means do nothing
-                pass
+                        # accepts the request
+                        previous_export = self.food_trading.get(requester.id, recepient.id)
+                        previous_export[rq.resource] = trade_amount
+                        for i in [constants.VEG, constants.MEAT, constants.GRAIN]:
+                            if requester.food[i] / requester.population >= constants.FOOD_SECURE[i]:
+                                previous_export[i] = 0
+
+                        self.food_trading.update(requester.id, recepient.id, previous_export)
+                else:
+                    # deny request, which means do nothing
+                    pass
     
