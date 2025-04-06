@@ -104,6 +104,7 @@ class SimLoop:
             return
 
         self.request_list.append(Request(player, target, amount, resource))
+        self.log.append(f"{player.name} requested {amount} {resource} from {target.name}")
 
     def invest_in_agriculture(self, player: Country) -> bool:
         if self.state != SimStates.PlayerPhase or not player.player_controlled:
