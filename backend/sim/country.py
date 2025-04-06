@@ -31,7 +31,7 @@ class Country:
         self.production_rate[constants.VEG] = starting_money/population * arable_land
         self.production_rate[constants.MEAT] = starting_money/population * arable_land
         self.production_rate[constants.GRAIN] = starting_money/population * arable_land
-        print(self.production_rate)
+        # print(self.production_rate)
 
         self.food = dict()
         self.food[constants.GRAIN] = 0
@@ -126,6 +126,11 @@ class Country:
 
         if self.risk / 30 > random.random():
             self.in_disaster = True
+
+        self.money = round(self.money)
+        self.population = round(self.population)
+        for i in [constants.GRAIN, constants.VEG, constants.MEAT]:
+            self.food[i] = round(self.food[i])
 
 
     def invest_in_agriculture(self) -> bool:

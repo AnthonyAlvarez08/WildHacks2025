@@ -2,9 +2,9 @@
 TODO: put actual values in here
 """
 
-VEG = 'v'
-MEAT = 'm'
-GRAIN = 'g'
+VEG = 'VEG'
+MEAT = 'MEAT'
+GRAIN = 'GRAIN'
 
 
 PRICES = {

@@ -5,6 +5,26 @@
 <head>
     <title>Wild Hacks 2025</title>
 
+    <style>
+        .griddisp {
+            display: grid;
+            grid-template-columns: repeat(4, 23%);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        .fourth {
+            padding: 10px
+        }
+
+        td {
+            vertical-align: top;
+        }
+    </style>
+
 </head>
 
 
@@ -15,48 +35,83 @@
 
     {{stuff}}
 
-    <div>
-        <h4>Current Turn</h4>
+    <h3>Countries' Stats</h3>
+    <div class="griddisp">
+        {% for i in stats %}
+        <div class="fourth">
+            {{ i.name }}. Population: {{ i.population }}. In disaster? {{ i.in_disaster }}. <br> Money {{ i.money }}
+                Resources
+                {{ i.food }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <table>
+
+        <td>
 
 
-        {% if flag %}
-            <h4>{{flagmsg}}</h4>
-        {% endif %}
 
-        <form action="/" method="post">
 
-            <h5>Countries</h5>
-            <input type="radio" id="None1" name="mycountry" value="None" checked="checked">
-            <label for="None1">None</label>
-            {% for i in mycountries %}
-            <input type="radio" id="{{i}}" name="mycountry" value="None">
-            <label for="{{i}}">{{i}}</label>
+            <h4>Current Turn</h4>
+
+            <form action="/" method="post">
+
+                <h5>My Own Countries</h5>
+                <input type="radio" id="None1" name="mycountry" value="None" checked="checked">
+                <label for="None1">None</label>
+                {% for i in mycountries %}
+                <input type="radio" id="{{i}}" name="mycountry" value="{{i}}">
+                <label for="{{i}}">{{i}}</label>
+                {% endfor %}
+
+                <h5> Target Countries</h5>
+                <input type="radio" id="None2" name="country" value="None" checked="checked">
+                <label for="None2">None</label>
+                {% for i in countries %}
+                <input type="radio" id="{{i}}" name="country" value="{{i}}">
+                <label for="{{i}}">{{i}}</label>
+                {% endfor %}
+
+
+
+                <h5>Options</h5>
+                {% for i in options %}
+                <input type="radio" id="{{i}}" name="option" value="{{i}}">
+                <label for="{{i}}">{{i}}</label>
+                {% endfor %}
+                <br><br>
+
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" min="1" max="500000000" value="1">
+
+
+                <br><br><input type="submit" value="Submit">
+
+            </form>
+
+        </td>
+
+        <td>
+
+            LOG
+
+            {% for i in log %}
+            <p>
+                {{i}}
+
+            </p>
             {% endfor %}
 
-            <h5> Target Countries</h5>
-            <input type="radio" id="None2" name="country" value="None" checked="checked">
-            <label for="None2">None</label>
-            {% for i in countries %}
-            <input type="radio" id="{{i}}" name="country" value="{{i}}">
-            <label for="{{i}}">{{i}}</label>
-            {% endfor %}
-
-            
-
-            <h5>Options</h5>
-            {% for i in options %}
-            <input type="radio" id="{{i}}" name="option" value="{{i}}">
-            <label for="{{i}}">{{i}}</label>
-            {% endfor %}
-            <br><br>
-
-            <label for="quantity">Quantity</label>
-            <input type="number" id="quantity" name="quantity" min="1" max="500000000" value="1">
+        </td>
 
 
-            <br><br><input type="submit" value="Submit">
+    </table>
 
-        </form>
+    {% if flag %}
+    <h4>{{flagmsg}}</h4>
+    {% endif %}
+
     </div>
 
 

@@ -93,7 +93,7 @@ class SimLoop:
         if self.state != SimStates.PlayerPhase or not player.player_controlled:
             return
 
-        self.request_list.append(Request(player, target, resource, amount))
+        self.request_list.append(Request(player, target, amount, resource))
 
     def invest_in_agriculture(self, player: Country) -> bool:
         if self.state != SimStates.PlayerPhase or not player.player_controlled:
@@ -108,7 +108,7 @@ class SimLoop:
     def end_player_turn(self):
         self.state = SimStates.CompReact
 
-        self.log_start = len(self.log)
+        self.log_start = len(self.log) - 1
 
         self._comp_react()
 
@@ -247,6 +247,7 @@ class SimLoop:
             if recepient.id != requester.id: # I forgot to check for this elswhere but who cares
 
                 # check if requester has surplus
+                print(requester.name, recepient.name, rq.resource, recepient.food, constants.FOOD_SECURE)
                 surplus = (recepient.food[rq.resource] / recepient.population - constants.FOOD_SECURE[rq.resource]) * recepient.population
                 if surplus > 0:
                     # random slice of their surplus I guess?
